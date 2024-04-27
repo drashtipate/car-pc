@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 09, 2023 at 12:44 PM
+-- Generation Time: Dec 21, 2023 at 09:13 AM
 -- Server version: 10.4.27-MariaDB
 -- PHP Version: 8.0.25
 
@@ -97,8 +97,8 @@ INSERT INTO `booking` (`id`, `car_id`, `user_id`, `firstname`, `lname`, `email`,
 --
 
 CREATE TABLE `brands` (
-  `id` bigint(20) UNSIGNED NOT NULL,
-  `name` varchar(255) NOT NULL,
+  `id` bigint(20) NOT NULL,
+  `name` varchar(255) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL,
   `image` varchar(255) NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
@@ -126,7 +126,7 @@ INSERT INTO `brands` (`id`, `name`, `image`, `created_at`, `updated_at`) VALUES
 --
 
 CREATE TABLE `cars` (
-  `id` bigint(20) UNSIGNED NOT NULL,
+  `id` bigint(20) NOT NULL,
   `name` varchar(255) NOT NULL,
   `brand_id` int(11) NOT NULL,
   `model` varchar(255) NOT NULL,
@@ -318,7 +318,8 @@ INSERT INTO `contactusqueries` (`id`, `name`, `emailId`, `contactnumber`, `messa
 (4, 'deep', 'deep@gmail.com', '9898891563', 'ucudhincksjdio', '2023-03-06 08:19:51', '2023-03-06 08:19:51'),
 (11, 'vivek', 'vivek@gmail.com', '1234567890', '.ndshisyidnkj', '2023-03-06 08:40:20', '2023-03-06 08:40:20'),
 (12, 'binu', 'binu@gmail.com', '1234569870', 'Lorem Ipsum is simply dummy text of the printing and typesetting industry.', '2023-03-06 23:25:43', '2023-03-06 23:25:43'),
-(14, 'nensi', 'nensi@gmail.com', '1234569872', 'I want to know you brach in Chandigarh?', '2023-03-24 06:08:33', '2023-03-24 06:08:33');
+(14, 'nensi', 'nensi@gmail.com', '1234569872', 'I want to know you brach in Chandigarh?', '2023-03-24 06:08:33', '2023-03-24 06:08:33'),
+(21, 'user', 'user12@gmail.com', '1234567890', 'hii,testing', '2023-12-14 04:41:18', '2023-12-14 04:41:18');
 
 -- --------------------------------------------------------
 
@@ -362,6 +363,30 @@ CREATE TABLE `discount` (
 
 INSERT INTO `discount` (`id`, `code`, `discount`, `disc`, `limit`, `created_at`, `updated_at`) VALUES
 (3, 'WELCOME20', '20', 'SPECIAL OFFER FIRST 10 MEMBERS', 'Only for Sunday from 18-03-2023', '2023-03-13 01:34:51', '2023-03-13 01:34:51');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `email_messages`
+--
+
+CREATE TABLE `email_messages` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `title` varchar(255) NOT NULL,
+  `subject` varchar(255) NOT NULL,
+  `action` varchar(255) NOT NULL,
+  `body` varchar(255) NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `email_messages`
+--
+
+INSERT INTO `email_messages` (`id`, `title`, `subject`, `action`, `body`, `created_at`, `updated_at`) VALUES
+(1, 'Newsletter Subscription', 'Welcome to Our Organization', 'NEWSLETTER_SUBSCRIPTION_CUSTOMER', 'Thank you for subscribing to our newsletter, you will hear from us soon.', NULL, NULL),
+(2, 'Newsletter Subscription', 'New Subscription', 'NEWSLETTER_SUBSCRIPTION_ADMIN', 'The with email {{$email}} has subscribed to out newsletter. Please add him/her to the mailing list.', NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -458,7 +483,34 @@ INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
 (19, '2023_03_13_062237_create_discount_table', 5),
 (20, '2023_03_30_093307_create_subscribers_table', 6),
 (21, '2023_04_18_085822_create_labels_table', 7),
-(22, '2023_04_28_104537_add_google_id_in_user_table', 8);
+(22, '2023_04_28_104537_add_google_id_in_user_table', 8),
+(23, '2023_12_14_122021_create_email_messages_table', 9),
+(24, '2023_12_15_060934_create_subscribers_table', 10),
+(25, '2023_12_15_062329_create_newsletters_table', 11),
+(26, '2023_12_15_064202_create_newsletters_table', 12);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `newsletters`
+--
+
+CREATE TABLE `newsletters` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `email` varchar(255) DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `newsletters`
+--
+
+INSERT INTO `newsletters` (`id`, `email`, `created_at`, `updated_at`) VALUES
+(4, 'cipherhex910@gmail.com', '2023-12-15 01:31:43', '2023-12-15 01:31:43'),
+(5, 'drashtivaghasiya95@gmail.com', '2023-12-15 01:39:04', '2023-12-15 01:39:04'),
+(9, 'udayvasoya603@gmail.com', '2023-12-15 01:46:59', '2023-12-15 01:46:59'),
+(11, 'cipherhex910@gmail.com', '2023-12-18 00:37:50', '2023-12-18 00:37:50');
 
 -- --------------------------------------------------------
 
@@ -595,10 +647,17 @@ INSERT INTO `states` (`id`, `name`, `countries_id`, `created_at`, `updated_at`) 
 
 CREATE TABLE `subscribers` (
   `id` bigint(20) UNSIGNED NOT NULL,
-  `SubscriberEmail` varchar(255) NOT NULL,
+  `email` varchar(255) NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `subscribers`
+--
+
+INSERT INTO `subscribers` (`id`, `email`, `created_at`, `updated_at`) VALUES
+(1, '', '2023-12-15 00:45:34', '2023-12-15 00:45:34');
 
 -- --------------------------------------------------------
 
@@ -628,7 +687,7 @@ INSERT INTO `users` (`id`, `name`, `email`, `number`, `password`, `images`, `rem
 (3, 'seta virani', 'seta@gmail.com', '1234567890', '$2y$10$xqtNdBWjQVMesq/ZdUUaGuyp7dO5P61Yiv9xqpKmmOA6k9q876s4.', '1680942520.jpg', NULL, '2023-03-02 00:35:12', '2023-04-24 07:19:13', NULL),
 (4, 'shriza', 'shriza@gmail.com', '9987612345', '$2y$10$fDT6vowV8Fpmu3Dg/0JEeu1LhFOHIvwgKAKwWDek/cwdCas67UJGm', '1679392567.jpg', NULL, '2023-03-21 04:26:07', '2023-04-04 07:12:24', NULL),
 (12, 'bhimanibhavu', 'bhimanibhavu@gmail.com', '9998855118', '$2y$10$NWQsOujVXmtGG026gKpnwePX3PbGqhwTGw3TVQKoDisaz.zCNGePe', '1681299625.jpg', NULL, '2023-03-25 08:26:59', '2023-04-12 06:10:25', NULL),
-(13, 'users12', 'user12@gmail.com', '1234567890', '$2y$10$ZYdQnhF0wDvDZdVhxVLoouog1Z9/C40wLSfdmhoA.QmgwyvcbUGdu', '1702122037.jpg', NULL, '2023-03-27 03:40:34', '2023-12-09 06:10:37', NULL),
+(13, 'users12', 'user12@gmail.com', '1234567890', '$2y$10$FQ1GxXg97IoIdd.fChDFCeqpC8KNT38iFYzkMeTfXtA3hX0M5uNiS', '1702122037.jpg', NULL, '2023-03-27 03:40:34', '2023-12-14 05:01:28', NULL),
 (15, 'drashti patel', 'drashtiv2392002@gmail.com', '7970712345', '$2y$10$cz5JR6oAl2Nwqddjq/dw8ek7sEYR.Yj0tzgIAK.o4BO/DXXRROCV2', '1681374595.jpg', NULL, '2023-04-13 02:59:55', '2023-12-09 02:33:16', NULL);
 
 -- --------------------------------------------------------
@@ -753,6 +812,12 @@ ALTER TABLE `discount`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indexes for table `email_messages`
+--
+ALTER TABLE `email_messages`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `failed_jobs`
 --
 ALTER TABLE `failed_jobs`
@@ -775,6 +840,12 @@ ALTER TABLE `location`
 -- Indexes for table `migrations`
 --
 ALTER TABLE `migrations`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `newsletters`
+--
+ALTER TABLE `newsletters`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -814,8 +885,7 @@ ALTER TABLE `states`
 -- Indexes for table `subscribers`
 --
 ALTER TABLE `subscribers`
-  ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `subscribers_subscriberemail_unique` (`SubscriberEmail`);
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Indexes for table `users`
@@ -856,13 +926,13 @@ ALTER TABLE `booking`
 -- AUTO_INCREMENT for table `brands`
 --
 ALTER TABLE `brands`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
 
 --
 -- AUTO_INCREMENT for table `cars`
 --
 ALTER TABLE `cars`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
 
 --
 -- AUTO_INCREMENT for table `car_images`
@@ -892,7 +962,7 @@ ALTER TABLE `contactusinfos`
 -- AUTO_INCREMENT for table `contactusqueries`
 --
 ALTER TABLE `contactusqueries`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
 
 --
 -- AUTO_INCREMENT for table `countries`
@@ -905,6 +975,12 @@ ALTER TABLE `countries`
 --
 ALTER TABLE `discount`
   MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+--
+-- AUTO_INCREMENT for table `email_messages`
+--
+ALTER TABLE `email_messages`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `failed_jobs`
@@ -928,7 +1004,13 @@ ALTER TABLE `location`
 -- AUTO_INCREMENT for table `migrations`
 --
 ALTER TABLE `migrations`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=27;
+
+--
+-- AUTO_INCREMENT for table `newsletters`
+--
+ALTER TABLE `newsletters`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT for table `password_reset`
@@ -958,7 +1040,7 @@ ALTER TABLE `states`
 -- AUTO_INCREMENT for table `subscribers`
 --
 ALTER TABLE `subscribers`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `users`

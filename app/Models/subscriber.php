@@ -9,7 +9,7 @@ class subscriber extends Model
 {
     use HasFactory;
     public $table = 'subscribers';
-    protected $fillable = ['SubscriberEmail'];
+    protected $fillable = ['email'];
     public $primaryKey = 'id';
     public $timestamps = true;
 }

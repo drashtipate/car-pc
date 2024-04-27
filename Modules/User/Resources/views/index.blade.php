@@ -500,9 +500,9 @@
                             <div class="alert alert-success" role="alert">
                                 {{ session()->get('message') }}
                             </div>
-                        @elseif (session()->has('error'))
+                        @elseif (session()->has('fail'))
                             <div class="alert alert-denger" role="alert">
-                                {{ session()->get('error') }}
+                                {{ session()->get('fail') }}
                             </div>
                         @endif
                 <div class="contact-form bg-light mb-4" style="padding: 30px;">
@@ -522,11 +522,11 @@
                             </div>
                             <div class="col-lg-6 form-group">
                                 <div class="form-group af-inner has-icon">
-                                    <input type="email" class="form-control p-4" name="emailId" placeholder="Your Email" >
+                                    <input type="email" class="form-control p-4" name="email" placeholder="Your Email" >
                                         <span class="form-control-icon">
                                             <i class="fa fa-envelope"></i>
                                         </span>
-                                        @error('emailId')
+                                        @error('email')
                                             <span class="text-danger">{{ $message }}</span>
                                         @enderror
                                 </div>

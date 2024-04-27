@@ -89,7 +89,7 @@
                             </div>
                             <input type="hidden" name="pickup" name="pickup" value="{{$datas->pickup}}">
                             <h6>
-                                <a style="color:#0062cc;" href="https://www.bing.com/local?lid=YN4070x1264614165227763079&id=YN4070x1264614165227763079&q=Anand+Yoga+Village&name=Anand+Yoga+Village&cp=15.005414009094238%7e74.02835845947266&ppois=15.005414009094238_74.02835845947266_Anand+Yoga+Village&PC=U531">
+                                <a style="color:#0062cc;" target="_blank" href="https://www.bing.com/local?lid=YN4070x1264614165227763079&id=YN4070x1264614165227763079&q=Anand+Yoga+Village&name=Anand+Yoga+Village&cp=15.005414009094238%7e74.02835845947266&ppois=15.005414009094238_74.02835845947266_Anand+Yoga+Village&PC=U531">
                                     <i class="fa-solid fa-location-dot blue"></i>{{$details->area}},{{$details->pincode}},{{$details->cityes->name}},{{$details->state->name}},{{$details->country->name}}
                                 </a>
                             </h6>
@@ -103,7 +103,7 @@
                                 </div>
                                 <input type="hidden" name="drop" name="drop" value="{{$datas->drop}}">
                                 <h6>
-                                    <a style="color:#0062cc;" href="https://www.google.co.in/maps/preview">
+                                    <a style="color:#0062cc;" href="https://www.google.co.in/maps/preview" target="_blank">
                                         <i class="fa-solid fa-location-dot blue"></i>{{$details->area}},{{$details->pincode}},{{$details->cityes->name}}
                                     </a>
                                 </h6>

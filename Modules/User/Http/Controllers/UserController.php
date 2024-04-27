@@ -2,35 +2,38 @@
 
 namespace Modules\User\Http\Controllers;
 
-use Illuminate\Contracts\Support\Renderable;
-use Illuminate\Http\Request;
-use Illuminate\Routing\Controller;
-use Illuminate\Support\Facades\Http; 
-
-use App\Models\{car, car_image, locations, brand, User, bookings, contactusquery, labels, Discount};
-//contactusinfo
-use App\Models\contactusinfo;
-
-//userservice
-use App\Models\userservice;
-
-//userteam
-use App\Models\userteam;
-
-//subscriberemail
-use App\Models\subscriber;
-
-use Illuminate\Support\Facades\DB;
-use App\helper\helper;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Auth;
-use Symfony\Contracts\Service\Attribute\Required;
-use Illuminate\Support\Facades\File; 
-use Illuminate\Support\Facades\Validator;
-use illuminate\support\Facades\Session;
-use Illuminate\Support\Facades\Storage;
 use DataTables;
 use Newsletter;
+use App\helper\helper;
+use App\Models\userteam;
+
+use App\Models\subscriber;
+
+//contactusinfo
+use App\Models\userservice;
+
+//userservice
+use Illuminate\Http\Request;
+
+//userteam
+use App\Models\contactusinfo;
+
+//subscriberemail
+use App\Mail\Mailmastersubscribe;
+
+use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Http;
+use illuminate\support\Facades\Session;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Contracts\Support\Renderable;
+use Symfony\Contracts\Service\Attribute\Required;
+use App\Models\{car, car_image, locations, brand, User, bookings, contactusquery, labels, Discount};
 
 
 
@@ -46,7 +49,7 @@ class UserController extends Controller
         $query = car::with(['brands', 'car_image'])->get();
         $category = brand::all();
 
-        // $label = labels::all();  
+        // $label = labels::all();
         $label = \DB::table('labels')->orderBy('id','ASC')->get();
 
         $data = Discount::all();
@@ -109,7 +112,7 @@ class UserController extends Controller
     {
         $contactus = \DB::table('contactusinfos')->orderBy('id','ASC')->get();
         return view('user::contact',compact('contactus'));
-       
+
     }
 
 
@@ -216,11 +219,13 @@ class UserController extends Controller
                 'password'                  => 'required_with:password_confirmation|same:password_confirmation|min:5|max:12|',
                 'password_confirmation'     => 'required|min:5|max:12|',
                 'checkbox'                  => 'required',
-                
+
             ]);
 
             $data = new User();
             if ($request->hasfile('user_image')) {
+
+
                 $file = $request->file('user_image');
                 $extention = $file->getClientOriginalExtension();
                 $filename = time() . '.' . $extention;
@@ -238,7 +243,7 @@ class UserController extends Controller
             // return redirect('users/login');
             return redirect('users/register')->with("message","Registered  successfully!!.");
         } catch (Throwable $e) {
-            
+
             return redirect('users/')->with("error","Registered  not successfully!!.");
             \DB::rollback();
         }
@@ -254,13 +259,13 @@ class UserController extends Controller
         $user =  $request->only('email', 'password');
 
         if (Auth::guard('users')->attempt($user)) {
-            
+
             return redirect('users/')->with("message","Login  successfully!!.");
-            
+
         } else {
             // toastr()->error('This Email and Password is not registered.');
             return redirect()->back()->withFail('Wrong Email Address or Password!');
-            
+
         }
     }
 
@@ -276,7 +281,8 @@ class UserController extends Controller
             #validation
             $validatedData = $request->validate([
                 'name'               => 'required|string|max:255',
-                'email'              => 'required|email|regex:/(.*)@gmail\.com/i|unique:users',
+                // 'email'              => 'required|email|regex:/(.*)@gmail\.com/i|unique:users',
+                'email'              => 'required|email|regex:/(.*)@gmail\.com/i',
                 'contactnumber'      => 'required|string|max:10|min:10',
                 'message'            => 'required|string',
                ]);
@@ -291,8 +297,8 @@ class UserController extends Controller
                 $contactus->save();
                 \DB::commit();
                 return redirect()->back()->with("message","Query Sent. We will contact you shortly !");
-            } 
-            else 
+            }
+            else
             {
                 return redirect()->back()->withFail('Something Went Wrong. Please Login First!!');
                 // echo "<script>alert('please login first!!')</script>";
@@ -301,21 +307,35 @@ class UserController extends Controller
 
 
     #subscriber email
-    // public function newsletter() 
-    // {
-    //     return view('user::index');
-    // }
+        // public function newsletter()
+        // {
+        //     return view('user::index');
 
-    // public function SubscriberEmail(Request $request) {
+        // }
 
-    //     if ( ! Newsletter::isSubscribed($request->email) ) 
-    //     {
-    //         Newsletter::subscribePending($request->email);
-    //         return redirect('/users')->with('success', 'Thanks For Subscribe');
-    //     }
-    //     return redirect('/users')->with('failure', 'Sorry! You have already subscribed ');
-        
-    // }
+        // public function SubscriberEmail(Request $request) {
+
+        //     if ( ! Newsletter::isSubscribed($request->email) )
+        //     {
+        //         Newsletter::subscribePending($request->email);
+        //         return redirect('/users')->with('success', 'Thanks For Subscribe');
+        //     }
+        //     return redirect('/users')->with('failure', 'Sorry! You have already subscribed ');
+
+        // }
+
+    public function sendEmail($title, $subject, $body, $email, $name='', $admin='')
+    {
+        $formated_body = str_replace('{{$email}}', $email, $body);
+        $credentials = [
+            'title' => $title,
+            'subject' => $subject,
+            'body' => $formated_body,
+            'email' => $email
+        ];
+
+        Mail::to($email)->send(new Mailmastersubscribe($credentials));
+    }
 
 
     #edit profile
@@ -340,7 +360,7 @@ class UserController extends Controller
             'number'                    =>  'required|max:10|min:10',
             'password'                  =>  'required_with:password_confirmation|same:password_confirmation|min:5|max:20|',
             'password_confirmation'     =>  'required|min:5|max:20|',
-            
+
         ]);
 
             if ($request->hasfile('user_image')) {
@@ -359,10 +379,10 @@ class UserController extends Controller
                 $file->move('images/user', $filename);
                 $data->images = $filename;
             }
-            
+
             $data->name = $request->username;
             $data->email = $request->email;
-            $data->number = $request->number;   
+            $data->number = $request->number;
             $data->password = Hash::make($request->password);
 
         $data->update();

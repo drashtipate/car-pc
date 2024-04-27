@@ -1,6 +1,7 @@
 <?php
 use Illuminate\Support\Facades\Route;
 use Modules\User\Http\Controllers\GoogleController;
+use Illuminate\Support\Facades\Auth;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -63,8 +64,8 @@ Route::prefix('users')->group(function() {
   Route::post('reset-password','ForgotPasswordController@submitResetPasswordForm')->name('reset.password.post');
 
   //subscriber
-  Route::get('newsletter','UserController@newsletter');
-  Route::post('/subscriberemail','UserController@SubscriberEmail');
+  Route::get('newsletter/subscribe','NewsletterController@newsletterForm');
+  Route::post('newsletter/subscribes','NewsletterController@storeEmail')->name('email.store');
 
 
   //edit profile

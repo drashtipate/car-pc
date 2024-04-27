@@ -58,12 +58,20 @@
                 <h4 class="text-uppercase text-light mb-4">Newsletter</h4>
                 <p class="mb-4">Get our weekly newsletter for latest car news exclusive offers and deals and more.</p>
                 <div class="w-100 mb-3">
+                    <form action="{{ route('email.store')}}" method="post">
+                        @csrf
                         <div class="input-group">
-                            <input type="email" name="SubscriberEmail" class="form-control bg-dark border-dark" style="padding: 25px;" value="" placeholder="Your Email" required>
+                            <input type="email" name="email" class="form-control bg-dark border-dark" style="padding: 25px;" value="" placeholder="Your Email" >
                             <div class="input-group-append">
-                                <a href="#" type="submit" class="btn btn-primary text-uppercase px-3">Subscriber<span class="arrow">&#x27F6;</span></a>
+                                <button type="submit" class="btn btn-primary text-uppercase px-3">Subscriber<span class="arrow">&#x27F6;</span></button>
                             </div> 
+                            <span class="text-danger">
+                                @error('email')
+                                    {{$message}}
+                                @enderror
+                            </span>
                         </div> 
+                    </form>
                 </div>
                 <i>Lorem sit sed elitr sed kasd et</i>
             </div>

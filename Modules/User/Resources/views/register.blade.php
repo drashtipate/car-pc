@@ -17,7 +17,7 @@
         font-weight: 400 !important;
     }
 </style>
-                            
+
 <div class="container-fluid py-5">
     <div class="container py-5">
 
@@ -48,8 +48,9 @@
                                         <label for="imageUpload"></label>
                                     </div>
                                     <div class="avatar-preview">
-                                        <div id="imagePreview" style="background-image:url({{asset('user/img/man.jpg')}});">
-                                        </div>
+                                        <!-- <div id="imagePreview" style="background-image:url({{asset('user/img/man.jpg')}});">
+                                        </div> -->
+                                        <img id="imagePreview" style="background-image:url({{asset('user/img/man.jpg')}});">
                                     </div>
                                         <span class="text-danger">
                                             @error('user_image')
@@ -125,8 +126,8 @@
                                                         @error('checkbox')
                                                          {{$message}}
                                                         @enderror
-                                                    </span>   
-                                                </div>  
+                                                    </span>
+                                                </div>
                                             </div>
                                             <div class="col-lg-12">
                                                 <div class="form-group">
